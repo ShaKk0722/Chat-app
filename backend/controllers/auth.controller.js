@@ -7,11 +7,11 @@ const registerUser = async (req, res) => {
     console.log("Register route");
     const { fullName, username, password, confirmPassword, sex } = req.body;
     if (password !== confirmPassword) {
-      return res.status(400).send("Passwords do not match");
+      return res.status(400).json({ error: "Passwords do not match" });
     }
     const user = await User.findOne({ username });
     if (user) {
-      return res.status(400).send("Username already exists");
+      return res.status(400).json({ error: "Username already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 8);
@@ -38,25 +38,53 @@ const registerUser = async (req, res) => {
         profilePic: newUser.profilePic,
       })
     } else {
-        res.status(400).send("Error creating user");
+      res.status(400).json({ error: "Error creating user" });
     }
   
   } catch (error) {
-    console.error("Error in registerUser:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error in registerUser:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 
 };
 
-const loginUser = (req, res) => {
-  console.log("Login route");
-  res.send("Login success");
+const loginUser = async (req, res) => {
+  try {
+    console.log("Login route");
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    const isPasswordMatch = await bcrypt.compare(password, user?.password || "");
+    if (!isPasswordMatch || !user) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+    generateTokenAndSetCookie(user._id, res);
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Error in loginUser:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 
-const logoutUser = (req, res) => {
+const logoutUser =  (req, res) => {
   console.log("Logout route");
-  res.send("Logout success");
+  try {
+    res.cookie("jwt", "", {
+      maxAge: 0,
+      httpOnly: true,
+      sameSite: "Strict",
+      secure: process.env.NODE_ENV !== "development",
+    });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Error in logoutUser:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 export { loginUser, registerUser, logoutUser };
