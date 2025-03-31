@@ -1,7 +1,9 @@
 import authRoutes from "./auth.routes.js";
+import messagesRoutes from "./message.routes.js";
 
 const routes = [
     { path: "/api/auth", handler: authRoutes },
+    { path: "/api/messages", handler: messagesRoutes },
 
 ];
 
