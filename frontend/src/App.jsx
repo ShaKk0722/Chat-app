@@ -2,11 +2,11 @@
 import './App.css'
 import Home from './page/home/home';
 import Login from './page/login/login';
-import Register from './page/register/register';
+import Register from './page/register/Register';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes } from 'react-router-dom';
 import { useAuthContext } from './context/AuthContext.jsx';
-
+import { Navigate } from 'react-router-dom';
 
 
 function App() {

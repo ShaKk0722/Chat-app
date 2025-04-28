@@ -39,7 +39,8 @@ const Register = () => {
                     <label htmlFor="Fullname" className="label p-2">
                     <span className='text-base label-text'>Full Name</span>
                     </label>
-                    <input
+                      <input
+                          
                         type="text"
                         id="Fullname"
                         placeholder='Enter fullname'
