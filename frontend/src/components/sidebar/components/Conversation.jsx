@@ -1,9 +1,14 @@
 import React from 'react'
 import useConversation from "../../../zustand/useConversation";
+import { useSocketContext } from '../../../context/SocketContext.jsx';
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
 	const isSelected = selectedConversation?._id === conversation._id;
+
+	const { onlineUsers } = useSocketContext();
+	const isOnline = onlineUsers.includes(conversation._id);
+
   return (
 		<>
 			<div className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer
@@ -17,7 +22,9 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 							src={conversation.profilePicture}
 							alt='user avatar'
 					  />
-					  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+					  {isOnline && (
+      					<div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+)}
 					</div>
 				</div>
 
