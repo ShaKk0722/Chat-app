@@ -1,7 +1,7 @@
 // import { useState } from 'react'
 import './App.css'
-import Home from './page/home/home';
-import Login from './page/login/login';
+import Home from './page/home/Home';
+import Login from './page/login/Login';
 import Register from './page/register/Register';
 import { Toaster } from 'react-hot-toast';
 import { Route, Routes } from 'react-router-dom';
@@ -13,7 +13,7 @@ function App() {
   // const [count, setCount] = useState(0)
   const { authUser } = useAuthContext()
   return (
-    <div className="p-4 h-screen flex items-center justify-center">
+    <div className="flex items-center justify-center h-screen p-4">
       <Routes>
         <Route path='/' element={authUser ? <Home /> : <Navigate to={"/login"} />} />
         <Route path='/login' element={authUser ? <Navigate to='/' /> : <Login />} />
